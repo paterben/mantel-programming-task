@@ -2,7 +2,20 @@
 
 A basic tool for parsing a file containing HTTP logs and analyzing the contents.
 
-Currently the tool just outputs the number of lines to the console.
+Computes the number of unique IP addresses, the top 3 URLs by frequency, and the top 3 IP addresses by frequency and writes the results to the console.
+
+## Features
+
+*   Calculates top 3 URLs in two different manners, one ignoring and one incorporating the domain name:
+    *   When ignoring the domain name, only the absolute path e.g. `/` or `/foo/bar` is considered.
+    *   When incorporating the domain name, the full domain name + absolute path is considered. In addition, the tool tries to infer the domain name from other log lines with the same IP. For example, if it sees a request for `IP=1.1.1.1, http://example.net/foo/bar` and another request for `IP=1.1.1.1, /foo/bar`, this will count as two requests for `http://example.net/foo/bar`. The tool won't attempt inference for IP addresses associated with multiple different domain names in the logs.
+*   Ignores query params, e.g. `/foo/bar` and `/foo/bar?baz=qux` are treated the same.
+
+## Assumptions and limitations
+
+*   For the purpose of calculating top URLs, non-HTTP GET requests are ignored as well as requests with failure HTTP status codes. The assumption is that these are not indicative of a URL's popularity. However, these requests are treated normally for determining IP address counts.
+*   The tool can handle requests of the form `GET http://example.com/foo.bar` or `GET /foo/bar`. However, if it sees a request such as `GET example.com/foo.bar`, it will currently treat the `example.com` as part of the URL path and not the host name.
+*   The tool doesn't perform reverse-DNS lookup to determine domain names, it just looks at what it finds in the logs.
 
 ## Cloning the repo
 
@@ -25,11 +38,3 @@ dotnet run --project HttpLogsAnalyzer -- --logFile "data\example-data.log"
 To see all possible command-line arguments, run `dotnet run --project HttpLogsAnalyzer -- --help`.
 
 You can run all tests with `dotnet test`.
-
-## Assumptions
-
-TODO
-
-## Future work
-
-TODO
