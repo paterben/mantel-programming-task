@@ -71,16 +71,17 @@ public partial class LogLineParser : ILogLineParser
             throw new FormatException($"Failed to parse HTTP request summary into its components: {summary}");
         }
         HttpMethod method = HttpMethod.Parse(m.Groups[1].Value);
-        Uri uri = new Uri(m.Groups[2].Value, UriKind.RelativeOrAbsolute);
+        Uri uri = new(m.Groups[2].Value, UriKind.RelativeOrAbsolute);
         if (uri.IsAbsoluteUri)
         {
-            // TODO: Are we sure that the host is always a domain name?
+            // TODO: What if the host is also just an IP address?
             return (method, uri.Host, uri.AbsolutePath);
         }
-        // This is a hack to extract the absolute path without query params.
+        // This is a hack to extract the absolute path without query params from the Uri.
         // Calling uri.AbsolutePath on a relative Uri throws an exception.
         // TODO: This can likely be improved, as currently a Uri like example.com/foo (without http://)
         // will be treated as relative and example.com will end up as part of the path instead of the domain.
+        // I just really don't want to resort to manual parsing of the domain name.
         uri = new Uri(new Uri("http://fake.com"), uri);
         return (method, null, uri.AbsolutePath);
     }
