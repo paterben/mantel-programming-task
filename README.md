@@ -9,7 +9,7 @@ Computes the number of unique IP addresses, the top 3 URLs by frequency, and the
 Calculates the top 3 URLs in two different manners, one ignoring and one incorporating the domain name:
 
 *   When ignoring the domain name, only the absolute path e.g. `/` or `/foo/bar` is considered.
-*   When incorporating the domain name, the full domain name + absolute path is considered. In addition, the tool tries to infer the domain name from other log lines with the same IP. For example, if it sees a request for `IP=1.1.1.1, http://example.net/foo/bar` and another request for `IP=1.1.1.1, /foo/bar`, this will count as two requests for `http://example.net/foo/bar`. The tool won't attempt inference for IP addresses associated with multiple different domain names in the logs.
+*   When incorporating the domain name, the full domain name + path is considered. In addition, the tool tries to infer the domain name from other log lines with the same IP. For example, if it sees a request for `IP=1.1.1.1, GET http://example.net/foo/bar` and another request for `IP=1.1.1.1, GET /foo/bar`, this will count as two requests for `GET http://example.net/foo/bar`. The tool won't attempt inference for IP addresses associated with multiple different domain names in the logs.
 
 ## Assumptions and limitations
 
