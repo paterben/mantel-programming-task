@@ -13,6 +13,7 @@ Calculates the top 3 URLs in two different manners, one ignoring and one incorpo
 
 ## Assumptions and limitations
 
+*   Assumes that the log file contains logs of **outgoing** requests, i.e. the IP address listed is that on which the URL is hosted.
 *   For the purpose of calculating top URLs, non-HTTP GET requests are ignored as well as requests with failure HTTP status codes. The assumption is that these are not indicative of a URL's popularity. However, these requests are treated normally for determining IP address counts.
 *   The tool can handle requests of the form `GET http://example.com/foo.bar` or `GET /foo/bar`. However, if it sees a request of the form `GET example.com/foo.bar`, it will currently treat the `example.com` as part of the URL path and not the host name.
 *   The tool doesn't perform reverse-DNS lookup to determine domain names, it just looks at what it finds in the logs.
