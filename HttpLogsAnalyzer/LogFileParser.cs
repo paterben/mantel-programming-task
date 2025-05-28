@@ -2,6 +2,7 @@ using System.Diagnostics;
 using HttpLogsAnalyzer;
 using HttpLogsAnalyzer.Models;
 
+// Simple exception wrapper for LogFileParser.
 public class LogFileParserException : Exception
 {
     public LogFileParserException()
