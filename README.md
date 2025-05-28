@@ -6,7 +6,11 @@ Currently the tool just outputs the number of lines to the console.
 
 ## Cloning the repo
 
-TODO
+To clone, run:
+
+```shell
+git clone https://github.com/paterben/mantel-programming-task.git
+```
 
 ## Building and running
 
