@@ -1,4 +1,6 @@
 ﻿using System.CommandLine;
+using System.Net;
+using HttpLogsAnalyzer.Models;
 
 namespace HttpLogsAnalyzer;
 
@@ -25,17 +27,29 @@ public class Program
 
     public static async Task ReadAndAnalyzeLogsAsync(FileInfo logFile, CancellationToken cancellationToken)
     {
-        using StreamReader logFileReader = logFile.OpenText();
-        int numLines = 0;
-        string? line;
-        while ((line = await logFileReader.ReadLineAsync(cancellationToken)) != null)
+        LogLineParser logLineParser = new();
+        LogFileParser logFileParser = new(logLineParser);
+        IList<LogLine> logLines = await logFileParser.ParseLogFileAsync(logFile, cancellationToken);
+        LogsAnalyzer logsAnalyzer = new();
+        int numUniqueIpAddresses = logsAnalyzer.CountUniqueIpAddresses(logLines);
+        IList<Tuple<string, int>> topUrlsIncludingDomain = logsAnalyzer.ComputeTopUrlsIncludingDomain(logLines);
+        IList<Tuple<string, int>> topUrlsExcludinggDomain = logsAnalyzer.ComputeTopUrlsExcludingDomain(logLines);
+        IList<Tuple<IPAddress, int>> topIpAddresses = logsAnalyzer.ComputeTopIpAddresses(logLines);
+        Console.WriteLine($"Number of unique IP addresses: {numUniqueIpAddresses}");
+        Console.WriteLine($"Top 3 URLs (including domain) and associated frequency:");
+        foreach ((string url, int frequency) in topUrlsIncludingDomain)
         {
-            numLines++;
+            Console.WriteLine($"    {url}: {frequency}");
         }
-        if (numLines == 0)
+        Console.WriteLine($"Top 3 URLs (excluding domain) and associated frequency:");
+        foreach ((string url, int frequency) in topUrlsExcludinggDomain)
         {
-            throw new ArgumentException($"Log file {logFile.FullName} is empty.");
+            Console.WriteLine($"    {url}: {frequency}");
         }
-        Console.WriteLine($"Num lines in log file: {numLines}");
+        Console.WriteLine($"Top 3 IPs and associated frequency:");
+        foreach ((IPAddress ipAddress, int frequency) in topIpAddresses)
+        {
+            Console.WriteLine($"    {ipAddress}: {frequency}");
+        }
     }
 }
