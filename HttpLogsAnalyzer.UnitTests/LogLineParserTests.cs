@@ -98,7 +98,6 @@ public sealed class LogLineParserTests
     }
 
     [TestMethod]
-    // HTTP request URIs shouldn't normally contain query params, however we handle them anyway.
     public void ParseLogLine_WhenQueryParams_Works()
     {
         var parser = new LogLineParser();

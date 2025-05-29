@@ -32,7 +32,7 @@ public partial class LogLineParser : ILogLineParser
 
     // Matches the HTTP request line (e.g. "GET http://example.net/faq/ HTTP/1.1"),
     // with capturing groups for the HTTP method and request Uri.
-    // See https://datatracker.ietf.org/doc/html/rfc2616#section-5.1.
+    // See https://datatracker.ietf.org/doc/html/rfc7230#section-3.1.1.
     [GeneratedRegex(@"(\w+) ([^ ]+) HTTP/.*")]
     private static partial Regex HttpRequestLineRegex();
 
@@ -71,9 +71,9 @@ public partial class LogLineParser : ILogLineParser
             throw new FormatException($"Failed to parse HTTP request summary into its components: {summary}");
         }
         HttpMethod method = HttpMethod.Parse(m.Groups[1].Value);
-        // The HTTP request URI can be an absoluteURI (e.g. http://example.com/foo/bar) or an abs_path (e.g. /foo/bar),
-        // or in some cases "*" or an authority specification.
-        // All the latter forms are considered to be relative Uris, so the `UriKind.RelativeOrAbsolute` is necessary.
+        // The HTTP request URI can be in absolute (e.g. http://example.com/foo/bar) or origin (e.g. /foo/bar) forms,
+        // or in some cases "*" or authority form.
+        // All the latter forms are relative Uris, so the `UriKind.RelativeOrAbsolute` is necessary.
         Uri requestUri = new(m.Groups[2].Value, UriKind.RelativeOrAbsolute);
         return (method, requestUri);
     }

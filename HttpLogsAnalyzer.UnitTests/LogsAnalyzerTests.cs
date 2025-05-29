@@ -161,7 +161,6 @@ public sealed class LogsAnalyzerTests
     }
 
     [TestMethod]
-    // Query params should not normally be present, however the analyzer should drop them anyway.
     public void ComputeTopUrls_IgnoresQueryParams()
     {
         var logsAnalyzer = new LogsAnalyzer();

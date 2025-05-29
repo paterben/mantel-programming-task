@@ -9,13 +9,12 @@ public class LogsAnalyzer
     }
 
     /// <summary>
-    /// Converts an HTTP request Uri to abs_path form.
-    /// HTTP request URIs can be in absoluteURI (e.g. http://example.com/foo/bar) or abs_path (e.g. /foo/bar) forms,
-    /// or in some cases "*" or an authority specification.
-    /// This drops the host and port for the absoluteURI form.
-    /// See https://datatracker.ietf.org/doc/html/rfc2616#section-5.1.2.
+    /// Converts an HTTP request Uri to its abs_path (aka origin) form (e.g. /foo/bar), and drops any query parameters.
+    /// HTTP request URIs can be in absolute (e.g. http://example.com/foo/bar) or origin (e.g. /foo/bar) forms,
+    /// or in some cases "*" or authority form.
+    /// See https://datatracker.ietf.org/doc/html/rfc7230#section-5.3.
     /// </summary>
-    /// <returns>The Uri absolute path, or empty if there is no absolute path.</returns>
+    /// <returns>The Uri abs_path, or empty if there is no abs_path.</returns>
     private static string GetUrlAbsolutePath(Uri requestUri)
     {
         if (requestUri.IsAbsoluteUri)
@@ -25,7 +24,7 @@ public class LogsAnalyzer
         if (requestUri.OriginalString == "*") return "";
         // This is a hack to extract the absolute path from the relative Uri.
         // Calling uri.AbsolutePath on a relative Uri throws an exception.
-        // This also ensures query params are dropped even though they shouldn't normally be present.
+        // This also ensures query params are dropped.
         var absoluteUri = new Uri(new Uri("http://fake"), requestUri);
         return absoluteUri.AbsolutePath;
     }
@@ -56,7 +55,8 @@ public class LogsAnalyzer
     /// <summary>
     /// Computes the top 3 URLs in abs_path form (e.g. /foo/bar), as well as the associated request count for each.
     /// Only GET requests with successful HTTP status codes are considered.
-    /// Requests with a URL in absoluteURI form (e.g. http://example.com/foo/bar) are first converted to abs_path form.
+    /// Query parameters are dropped.
+    /// Requests with a URL in absolute form (e.g. http://example.com/foo/bar) are first converted to abs_path form.
     /// </summary>
     /// <returns>Up to three tuples of (URL, count) ordered from highest to lowest count.</returns>
     public IList<Tuple<string, int>> ComputeTopUrls(IList<LogLine> logLines)

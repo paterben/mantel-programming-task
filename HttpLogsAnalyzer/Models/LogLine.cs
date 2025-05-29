@@ -11,8 +11,8 @@ public class LogLine
 
     public required HttpMethod HttpMethod { get; set; }
 
-    // The HTTP request URI, e.g. http://example.com/foo/bar (absoluteURI) or /foo/bar (abs_path).
-    // See https://datatracker.ietf.org/doc/html/rfc2616#section-5.1.2.
+    // The HTTP request URI, e.g. http://example.com/foo/bar (absolute form) or /foo/bar (origin form).
+    // See https://datatracker.ietf.org/doc/html/rfc7230#section-5.3.
     public required Uri RequestUri { get; set; }
 
     public required HttpStatusCode StatusCode { get; set; }
