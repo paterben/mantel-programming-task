@@ -15,7 +15,7 @@ Writes results to the console output.
 *   For the purpose of calculating top URLs:
     *   Requests with failure HTTP status codes are ignored. The assumption is that these are not indicative of a URL's popularity.
     *   Only GET requests are considered. This is debatable however certain methods like OPTIONS and CONNECT allow special kinds of URLs which would complicate things.
-    *   Only the abs_path (e.g. `/foo/bar` is considered). Absolute URLs (e.g. `http://example.com/foo/bar`) are first converted to abs_path format. The HTTP spec allows servers to differentiate resources by Host (see https://datatracker.ietf.org/doc/html/rfc2616#section-5.2), but we assume this is not the case here.
+    *   Only the abs_path (e.g. `/foo/bar`) is considered. Absolute URLs are first converted to abs_path format (e.g. `http://example.com/foo/bar` --> `/foo/bar`). The HTTP spec allows servers to differentiate resources by Host (see https://datatracker.ietf.org/doc/html/rfc2616#section-5.2), but we assume this is not the case here.
     *   Star URLs (`*`), which are technically allowed by the HTTP spec, are ignored.
 *   Log timestamp is parsed but ignored in the analysis.
 *   User agent is ignored.
