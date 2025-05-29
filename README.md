@@ -20,6 +20,7 @@ Writes results to the console output.
 *   Log timestamp is parsed but ignored in the analysis.
 *   User agent is ignored.
 *   I wasn't able to determine the meaning of some of the other fields in the logs. These fields are ignored.
+*   Testing was only done on limited sample data so not all edge cases may have been anticipated correctly.
 
 ## Cloning the repo
 
