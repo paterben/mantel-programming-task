@@ -9,6 +9,8 @@ Computes:
 
 Writes results to the console output.
 
+See [example data](HttpLogsAnalyzer.FunctionalTests/data/example-data.log) and [example output](HttpLogsAnalyzer.FunctionalTests/ProgramTests.cs).
+
 ## Assumptions and limitations
 
 *   Assumes that the log file contains logs of **incoming** requests, i.e. the IP address listed is that of the client.
