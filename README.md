@@ -34,10 +34,10 @@ git clone https://github.com/paterben/mantel-programming-task.git
 
 Building the repo requires the .NET 8 SDK, available at https://dotnet.microsoft.com/en-us/download/dotnet/8.0.
 
-You can open the solution in Visual Studio (untested) or VSCode, or run the following from the top-level directory:
+You can open the solution in Visual Studio (untested) or VSCode, or build and run it from the top-level directory:
 
 ```shell
-dotnet run --project HttpLogsAnalyzer -- --logFile "data\example-data.log"
+dotnet run --project HttpLogsAnalyzer -- --logFile "HttpLogsAnalyzer.FunctionalTests\data\example-data.log"
 ```
 
 To see all possible command-line arguments, run `dotnet run --project HttpLogsAnalyzer -- --help`.

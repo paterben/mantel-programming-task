@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpLogsAnalyzer", "HttpLog
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpLogsAnalyzer.UnitTests", "HttpLogsAnalyzer.UnitTests\HttpLogsAnalyzer.UnitTests.csproj", "{2B26FDB8-3D79-48E8-A1F1-46C32BD31C1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpLogsAnalyzer.FunctionalTests", "HttpLogsAnalyzer.FunctionalTests\HttpLogsAnalyzer.FunctionalTests.csproj", "{34B5E14A-0416-415C-9EA7-8F6739836BB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{2B26FDB8-3D79-48E8-A1F1-46C32BD31C1D}.Release|x64.Build.0 = Release|Any CPU
 		{2B26FDB8-3D79-48E8-A1F1-46C32BD31C1D}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B26FDB8-3D79-48E8-A1F1-46C32BD31C1D}.Release|x86.Build.0 = Release|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Debug|x64.Build.0 = Debug|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Debug|x86.Build.0 = Debug|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Release|x64.ActiveCfg = Release|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Release|x64.Build.0 = Release|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Release|x86.ActiveCfg = Release|Any CPU
+		{34B5E14A-0416-415C-9EA7-8F6739836BB0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
