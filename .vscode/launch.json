@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/HttpLogsAnalyzer/bin/Debug/net8.0/HttpLogsAnalyzer.exe",
             "args": [
                 "--logFile",
-                "${workspaceFolder}\\data\\example-data.log",
+                "${workspaceFolder}\\HttpLogsAnalyzer.FunctionalTests\\data\\example-data.log",
             ],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
