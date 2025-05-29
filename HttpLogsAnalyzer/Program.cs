@@ -31,25 +31,19 @@ public class Program
         LogFileParser logFileParser = new(logLineParser);
         IList<LogLine> logLines = await logFileParser.ParseLogFileAsync(logFile, cancellationToken);
         LogsAnalyzer logsAnalyzer = new();
-        int numUniqueIpAddresses = logsAnalyzer.CountUniqueIpAddresses(logLines);
-        IList<Tuple<string, int>> topUrlsIncludingDomain = logsAnalyzer.ComputeTopUrlsIncludingDomain(logLines);
-        IList<Tuple<string, int>> topUrlsExcludinggDomain = logsAnalyzer.ComputeTopUrlsExcludingDomain(logLines);
-        IList<Tuple<IPAddress, int>> topIpAddresses = logsAnalyzer.ComputeTopIpAddresses(logLines);
-        Console.WriteLine($"Number of unique IP addresses: {numUniqueIpAddresses}");
-        Console.WriteLine($"Top 3 URLs (including domain) and associated frequency:");
-        foreach ((string url, int frequency) in topUrlsIncludingDomain)
-        {
-            Console.WriteLine($"    {url}: {frequency}");
-        }
-        Console.WriteLine($"Top 3 URLs (excluding domain) and associated frequency:");
-        foreach ((string url, int frequency) in topUrlsExcludinggDomain)
-        {
-            Console.WriteLine($"    {url}: {frequency}");
-        }
-        Console.WriteLine($"Top 3 IPs and associated frequency:");
-        foreach ((IPAddress ipAddress, int frequency) in topIpAddresses)
+        int numUniqueClientIpAddresses = logsAnalyzer.CountUniqueClientIpAddresses(logLines);
+        IList<Tuple<IPAddress, int>> topClientIpAddresses = logsAnalyzer.ComputeTopClientIpAddresses(logLines);
+        IList<Tuple<string, int>> topUrls = logsAnalyzer.ComputeTopUrls(logLines);
+        Console.WriteLine($"Number of unique client IP addresses: {numUniqueClientIpAddresses}");
+        Console.WriteLine($"Top 3 client IPs and associated request counts:");
+        foreach ((IPAddress ipAddress, int frequency) in topClientIpAddresses)
         {
             Console.WriteLine($"    {ipAddress}: {frequency}");
+        }
+        Console.WriteLine($"Top 3 URLs (in abs_path form) and associated request counts:");
+        foreach ((string url, int frequency) in topUrls)
+        {
+            Console.WriteLine($"    {url}: {frequency}");
         }
     }
 }

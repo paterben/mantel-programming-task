@@ -5,18 +5,15 @@ namespace HttpLogsAnalyzer.Models;
 // Structured elements extracted from a line in a log file of HTTP requests.
 public class LogLine
 {
-    public required IPAddress IpAddress { get; set; }
+    public required IPAddress ClientIpAddress { get; set; }
 
     public required DateTimeOffset Timestamp { get; set; }
 
     public required HttpMethod HttpMethod { get; set; }
 
-    // The domain name, e.g example.net, if known.
-    public string? Domain { get; set; }
-
-    // The URL absolute path e.g. "/", "/foo", "/bar/index.html".
-    // Does not include scheme, host or query params.
-    public required string AbsolutePath { get; set; }
+    // The HTTP request URI, e.g. http://example.com/foo/bar (absoluteURI) or /foo/bar (abs_path).
+    // See https://datatracker.ietf.org/doc/html/rfc2616#section-5.1.2.
+    public required Uri RequestUri { get; set; }
 
     public required HttpStatusCode StatusCode { get; set; }
 

@@ -19,7 +19,7 @@ public partial class LogLineParser : ILogLineParser
     // - a sequence of non-space characters
     private static partial Regex LogLinePartsRegex();
 
-    private const int kIpAddressIndex = 0;
+    private const int kClientIpAddressIndex = 0;
     private const int kTimestampIndex = 3;
     private const int kHttpRequestSummaryIndex = 4;
     private const int kHttpStatusCodeIndex = 5;
@@ -30,13 +30,14 @@ public partial class LogLineParser : ILogLineParser
     // Example: 10/Jul/2018:22:01:17 +0200.
     private const string kTimestampFormat = "dd/MMM/yyyy:HH:mm:ss zzz";
 
-    // Matches the HTTP request summary (e.g. "GET http://example.net/faq/ HTTP/1.1"),
+    // Matches the HTTP request line (e.g. "GET http://example.net/faq/ HTTP/1.1"),
     // with capturing groups for the HTTP method and request Uri.
+    // See https://datatracker.ietf.org/doc/html/rfc2616#section-5.1.
     [GeneratedRegex(@"(\w+) ([^ ]+) HTTP/.*")]
-    private static partial Regex HttpRequestSummaryRegex();
+    private static partial Regex HttpRequestLineRegex();
 
     /// <summary>
-    /// Parses a line containing info about a single HTTP request.
+    /// Parses a line containing info about a single incoming HTTP request.
     /// </summary>
     /// <returns>The parsed log line.</returns>
     /// <exception cref="FormatException">If the log line is badly formatted.</exception>
@@ -47,42 +48,33 @@ public partial class LogLineParser : ILogLineParser
         {
             throw new FormatException($"Log line has too few parts (expected at least {kMinLogLineParts}, actual {parts.Count}): {line}");
         }
-        IPAddress ipAddress = IPAddress.Parse(parts[kIpAddressIndex].Value);
+        IPAddress clientIpAddress = IPAddress.Parse(parts[kClientIpAddressIndex].Value);
         DateTimeOffset timestamp = DateTimeOffset.ParseExact(parts[kTimestampIndex].Value.Trim('[', ']'), kTimestampFormat, CultureInfo.InvariantCulture);
         string httpRequestSummary = parts[kHttpRequestSummaryIndex].Value.Trim('"');
-        (HttpMethod method, string? domain, string absolutePath) = ParseHttpRequestSummary(httpRequestSummary);
+        (HttpMethod method, Uri requestUri) = ParseHttpRequestLine(httpRequestSummary);
         HttpStatusCode statusCode = (HttpStatusCode)int.Parse(parts[kHttpStatusCodeIndex].Value);
         return new LogLine
         {
-            IpAddress = ipAddress,
+            ClientIpAddress = clientIpAddress,
             Timestamp = timestamp,
             HttpMethod = method,
-            Domain = domain,
-            AbsolutePath = absolutePath,
+            RequestUri = requestUri,
             StatusCode = statusCode
         };
     }
 
-    private (HttpMethod method, string? domain, string absolutePath) ParseHttpRequestSummary(string summary)
+    private (HttpMethod method, Uri requestUri) ParseHttpRequestLine(string summary)
     {
-        Match m = HttpRequestSummaryRegex().Match(summary);
+        Match m = HttpRequestLineRegex().Match(summary);
         if (!m.Success)
         {
             throw new FormatException($"Failed to parse HTTP request summary into its components: {summary}");
         }
         HttpMethod method = HttpMethod.Parse(m.Groups[1].Value);
-        Uri uri = new(m.Groups[2].Value, UriKind.RelativeOrAbsolute);
-        if (uri.IsAbsoluteUri)
-        {
-            // TODO: What if the host is also just an IP address?
-            return (method, uri.Host, uri.AbsolutePath);
-        }
-        // This is a hack to extract the absolute path without query params from the Uri.
-        // Calling uri.AbsolutePath on a relative Uri throws an exception.
-        // TODO: This can likely be improved, as currently a Uri like example.com/foo (without http://)
-        // will be treated as relative and example.com will end up as part of the path instead of the domain.
-        // I just really don't want to resort to manual parsing of the domain name.
-        uri = new Uri(new Uri("http://fake.com"), uri);
-        return (method, null, uri.AbsolutePath);
+        // The HTTP request URI can be an absoluteURI (e.g. http://example.com/foo/bar) or an abs_path (e.g. /foo/bar),
+        // or in some cases "*" or an authority specification.
+        // All the latter forms are considered to be relative Uris, so the `UriKind.RelativeOrAbsolute` is necessary.
+        Uri requestUri = new(m.Groups[2].Value, UriKind.RelativeOrAbsolute);
+        return (method, requestUri);
     }
 }

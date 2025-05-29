@@ -16,29 +16,26 @@ public sealed class LogFileParserTests
         IList<LogLine> logLines = await parser.ParseLogFileAsync(new FileInfo(@"testdata\correct.log"), CancellationToken.None);
         var logLine1 = new LogLine
         {
-            IpAddress = new IPAddress([177, 71, 128, 21]),
+            ClientIpAddress = new IPAddress([177, 71, 128, 21]),
             Timestamp = new DateTimeOffset(2018, 7, 10, 22, 21, 28, TimeSpan.FromHours(2)),
             HttpMethod = HttpMethod.Get,
-            Domain = null,
-            AbsolutePath = "/intranet-analytics/",
+            RequestUri = new Uri("/intranet-analytics/", UriKind.Relative),
             StatusCode = HttpStatusCode.OK
         };
         var logLine2 = new LogLine
         {
-            IpAddress = new IPAddress([168, 41, 191, 40]),
+            ClientIpAddress = new IPAddress([168, 41, 191, 40]),
             Timestamp = new DateTimeOffset(2018, 7, 9, 10, 11, 30, TimeSpan.FromHours(2)),
             HttpMethod = HttpMethod.Get,
-            Domain = "example.net",
-            AbsolutePath = "/faq/",
+            RequestUri = new Uri("http://example.net/faq/"),
             StatusCode = HttpStatusCode.OK
         };
         var logLine3 = new LogLine
         {
-            IpAddress = new IPAddress([168, 41, 191, 41]),
+            ClientIpAddress = new IPAddress([168, 41, 191, 41]),
             Timestamp = new DateTimeOffset(2018, 7, 11, 17, 41, 30, TimeSpan.FromHours(2)),
             HttpMethod = HttpMethod.Get,
-            Domain = null,
-            AbsolutePath = "/this/page/does/not/exist/",
+            RequestUri = new Uri("/this/page/does/not/exist/", UriKind.Relative),
             StatusCode = HttpStatusCode.NotFound
         };
         var expectedLogLines = new LogLine[] { logLine1, logLine2, logLine3 };
