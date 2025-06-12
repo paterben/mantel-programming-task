@@ -1,6 +1,8 @@
 using System.Net;
 using HttpLogsAnalyzer.Models;
 
+namespace HttpLogsAnalyzer;
+
 public class LogsAnalyzer
 {
     private static bool IsSuccessStatusCode(HttpStatusCode statusCode)
